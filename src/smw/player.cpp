@@ -23,7 +23,7 @@
 #include "objects/moving/MO_Hammer.h"
 #include "objects/moving/MO_IceBlast.h"
 #include "objects/moving/MO_Podobo.h"
-#include "../common/Game.h"
+#include "Game.h"
 
 #include <cassert>
 #include <cmath>
@@ -2183,7 +2183,7 @@ bool CPlayer::mapcolldet_handleOutOfScreen()
         }
 
         return true;
-    } else if (fPrecalculatedY + PH >= 480) {
+    } else if (fPrecalculatedY + PH >= App::screenHeight) {
         //on ground outside of the screen?
         setYi(-PH);
         fOldY = (float)(-PH - 1);

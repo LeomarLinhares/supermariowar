@@ -6,7 +6,7 @@
 #include "map.h"
 #include "player.h"
 #include "ResourceManager.h"
-#include "../../common/Game.h"
+#include "Game.h"
 
 extern CMap* g_map;
 

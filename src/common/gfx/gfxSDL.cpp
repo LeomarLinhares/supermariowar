@@ -4,7 +4,7 @@
 
 #include "SDL.h"
 #include "SDL_image.h"
-#include "../Game.h"
+#include "Game.h"
 
 #include <chrono>
 #include <iomanip>
@@ -40,6 +40,9 @@ GraphicsSDL::~GraphicsSDL() {
 
 bool GraphicsSDL::Init(bool fullscreen)
 {
+    App::screenWidth = GFX_SCREEN_W;
+    App::screenHeight = GFX_SCREEN_H;
+
     try {
         init_sdl();
         init_sdl_img();

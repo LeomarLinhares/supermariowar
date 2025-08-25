@@ -2,6 +2,7 @@
 
 #include "gfx/Color.h"
 #include "gfx/gfxSDL.h"
+#include "Game.h"
 
 #include "SDL_image.h"
 #include "sdl12wrapper.h"
@@ -11,6 +12,7 @@
 #include <cstdio>
 #include <iostream>
 #include <string>
+#include <cstdlib>
 
 using namespace std;
 
@@ -182,6 +184,18 @@ RGB getRgb(SDL_Surface* surf, int x, int y)
 
 
 bool gfx_init(int w, int h, bool fullscreen) {
+    const char* env_w = getenv("SMW_WIDTH");
+    const char* env_h = getenv("SMW_HEIGHT");
+    if (env_w)
+        w = atoi(env_w);
+    if (env_h)
+        h = atoi(env_h);
+
+    GFX_SCREEN_W = w;
+    GFX_SCREEN_H = h;
+    App::screenWidth = w;
+    App::screenHeight = h;
+
     return gfx.Init(fullscreen);
 }
 
