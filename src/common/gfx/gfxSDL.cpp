@@ -4,6 +4,7 @@
 
 #include "SDL.h"
 #include "SDL_image.h"
+#include "../Game.h"
 
 #include <chrono>
 #include <iomanip>
@@ -14,8 +15,8 @@
 extern SDL_Surface* screen;
 
 #define GFX_BPP 16
-#define GFX_SCREEN_W 640
-#define GFX_SCREEN_H 480
+#define GFX_SCREEN_W App::screenWidth
+#define GFX_SCREEN_H App::screenHeight
 
 enum SDL_Errors {
     E_INIT_SDL,

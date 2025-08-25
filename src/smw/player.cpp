@@ -23,6 +23,7 @@
 #include "objects/moving/MO_Hammer.h"
 #include "objects/moving/MO_IceBlast.h"
 #include "objects/moving/MO_Podobo.h"
+#include "../common/Game.h"
 
 #include <cassert>
 #include <cmath>
@@ -2774,12 +2775,12 @@ void CPlayer::flipsidesifneeded()
     //Use ix here to avoid rounding issues (can crash if tile_x_right evals to over the right side of screen)
     if (ix < 0 || fx < 0.0f) {
         //This avoids rounding errors
-        setXf(fx + 640);
-        fOldX += 640;
+        setXf(fx + App::screenWidth);
+        fOldX += App::screenWidth;
         //printf("Flipped Left\n");
-    } else if (ix >= 640 || fx >= 640) {
-        setXf(fx - 640);
-        fOldX -= 640;
+    } else if (ix >= App::screenWidth || fx >= App::screenWidth) {
+        setXf(fx - App::screenWidth);
+        fOldX -= App::screenWidth;
         //printf("Flipped Right\n");
     }
 }

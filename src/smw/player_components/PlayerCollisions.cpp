@@ -6,6 +6,7 @@
 #include "map.h"
 #include "player.h"
 #include "ResourceManager.h"
+#include "../../common/Game.h"
 
 extern CMap* g_map;
 
@@ -28,8 +29,8 @@ bool PlayerCollisions::checktop(CPlayer& player)
         return false;
 
     short tile_x_right = -1;
-    if (player.rightX() >= 640)
-        tile_x_right = (player.rightX() - 640) / TILESIZE;
+    if (player.rightX() >= App::screenWidth)
+        tile_x_right = (player.rightX() - App::screenWidth) / TILESIZE;
     else
         tile_x_right = player.rightX() / TILESIZE;
 
@@ -104,8 +105,8 @@ bool PlayerCollisions::checkright(CPlayer& player)
 
     short tile_x = -1;
 
-    if (player.rightX() >= 640)
-        tile_x = (player.rightX() - 640) / TILESIZE;
+    if (player.rightX() >= App::screenWidth)
+        tile_x = (player.rightX() - App::screenWidth) / TILESIZE;
     else
         tile_x = player.rightX() / TILESIZE;
 
@@ -136,8 +137,8 @@ void PlayerCollisions::checksides(CPlayer& player)
     short tile_x_left = player.leftX() >> 5;
 
     short tile_x_right = -1;
-    if (player.rightX() >= 640)
-        tile_x_right = (player.rightX() - 640) >> 5;
+    if (player.rightX() >= App::screenWidth)
+        tile_x_right = (player.rightX() - App::screenWidth) >> 5;
     else
         tile_x_right = player.rightX() >> 5;
 

@@ -3,6 +3,7 @@
 #include "GlobalConstants.h"
 #include "map.h"
 #include "gfx/gfxSprite.h"
+#include "Game.h"
 
 extern CMap* g_map;
 
@@ -52,13 +53,13 @@ std::array<IO_Block*, 4> CObject::GetCollisionBlocks() const
 {
     short xl = 0;
     if (ix < 0)
-        xl = (ix + 640) / TILESIZE;
+        xl = (ix + App::screenWidth) / TILESIZE;
     else
         xl = ix / TILESIZE;
 
     short xr = 0;
-    if (ix + iw >= 640)
-        xr = (ix + iw - 640) / TILESIZE;
+    if (ix + iw >= App::screenWidth)
+        xr = (ix + iw - App::screenWidth) / TILESIZE;
     else
         xr = (ix + iw) / TILESIZE;
 
