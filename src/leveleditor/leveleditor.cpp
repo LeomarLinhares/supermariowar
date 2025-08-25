@@ -26,6 +26,7 @@
 #include "FPSLimiter.h"
 #include "GameMode.h"
 #include "gfx.h"
+#include "Game.h"
 #include "GlobalConstants.h"
 #include "map.h"
 #include "MapList.h"
@@ -172,22 +173,24 @@ short			x_shake = 0;
 short			y_shake = 0;
 
 int				mouse_x, mouse_y;
+constexpr int SCREEN_WIDTH = App::screenWidth;
+constexpr int SCREEN_HEIGHT = App::screenHeight;
 
 void update_mouse_coords() {
 	mouse_x = event.motion.x;
 	mouse_y = event.motion.y;
 	if (mouse_x < 0) mouse_x = 0;
 	if (mouse_y < 0) mouse_y = 0;
-	if (mouse_x > 640 - 1) mouse_x = 640 - 1;
-	if (mouse_y > 480 - 1) mouse_y = 480 - 1;
+	if (mouse_x > SCREEN_WIDTH - 1) mouse_x = SCREEN_WIDTH - 1;
+	if (mouse_y > SCREEN_HEIGHT - 1) mouse_y = SCREEN_HEIGHT - 1;
 }
 
 int bound_to_window_w(int x) {
-	return std::max(0, std::min(x, 640));
+	return std::max(0, std::min(x, SCREEN_WIDTH));
 }
 
 int bound_to_window_h(int y) {
-	return std::max(0, std::min(y, 480));
+	return std::max(0, std::min(y, SCREEN_HEIGHT));
 }
 
 CEyecandyContainer eyecandy[3];
@@ -429,7 +432,7 @@ int main(int argc, char *argv[])
         }
     }
 
-	gfx_init(640,480, g_fFullScreen);
+	gfx_init(SCREEN_WIDTH,SCREEN_HEIGHT, g_fFullScreen);
 	blitdest = screen;
         g_tilesetmanager->init(convertPath("gfx/Classic/tilesets").c_str());
 
@@ -516,10 +519,10 @@ int main(int argc, char *argv[])
 	rm->spr_number_icons.init(convertPath("gfx/packs/Classic/awards/killsinrownumbers.png"), colors::MAGENTA);
 
     for (short i = 0; i < 3; i++) {
-		rm->spr_hazard_fireball[i].SetWrap(true, 640 >> i);
-		rm->spr_hazard_rotodisc[i].SetWrap(true, 640 >> i);
-		rm->spr_hazard_flame[i].SetWrap(true, 640 >> i);
-		rm->spr_hazard_pirhanaplant[i].SetWrap(true, 640 >> i);
+		rm->spr_hazard_fireball[i].SetWrap(true, SCREEN_WIDTH >> i);
+		rm->spr_hazard_rotodisc[i].SetWrap(true, SCREEN_WIDTH >> i);
+		rm->spr_hazard_flame[i].SetWrap(true, SCREEN_WIDTH >> i);
+		rm->spr_hazard_pirhanaplant[i].SetWrap(true, SCREEN_WIDTH >> i);
 	}
 #ifdef USE_SDL2
     if ( SDL_SetColorKey(s_platform, SDL_TRUE, SDL_MapRGB(s_platform->format, 255, 0, 255)) < 0) {
@@ -553,8 +556,8 @@ int main(int argc, char *argv[])
 	printf("\n---------------- load map ----------------\n");
 
 	//Setup Platforms
-	constexpr int UI_PLATFORM_START_X = (640 - UI_PLATFORM_COLS * 32 - (UI_PLATFORM_COLS - 1) * 10 /* spacing */) / 2;
-	constexpr int UI_PLATFORM_START_Y = (480 - UI_PLATFORM_ROWS * 32 - (UI_PLATFORM_ROWS - 1) * 10 /* spacing */) / 2;
+	constexpr int UI_PLATFORM_START_X = (SCREEN_WIDTH - UI_PLATFORM_COLS * 32 - (UI_PLATFORM_COLS - 1) * 10 /* spacing */) / 2;
+	constexpr int UI_PLATFORM_START_Y = (SCREEN_HEIGHT - UI_PLATFORM_ROWS * 32 - (UI_PLATFORM_ROWS - 1) * 10 /* spacing */) / 2;
     for (short iPlatform = 0; iPlatform < MAX_PLATFORMS; iPlatform++) {
 		g_Platforms[iPlatform].rIcon[0].x = (iPlatform % 8) * 32;
 		g_Platforms[iPlatform].rIcon[0].y = (iPlatform / 8) * 32 + 224;
@@ -1587,8 +1590,8 @@ int editor_edit()
 					}
 				}
 
-				rm->menu_font_small.draw(0, 480 - (rm->menu_font_small.getHeight() << 1), "No Player Spawn: [x] Global, [1-4] Team Spawn Zone");
-				rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "[a] All, [n] None, [i] Invert");
+				rm->menu_font_small.draw(0, SCREEN_HEIGHT - (rm->menu_font_small.getHeight() << 1), "No Player Spawn: [x] Global, [1-4] Team Spawn Zone");
+				rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "[a] All, [n] None, [i] Invert");
             } else if (edit_mode == 5) {
                 for (int k = 0; k < MAPHEIGHT; k++) {
                     for (int j = 0; j < MAPWIDTH; j++) {
@@ -1597,7 +1600,7 @@ int editor_edit()
 					}
 				}
 
-				rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "No Item Spawn");
+				rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "No Item Spawn");
             } else if (edit_mode == 6) {
                 for (int k = 0; k < MAPHEIGHT; k++) {
                     for (int j = 0; j < MAPWIDTH; j++) {
@@ -1607,12 +1610,12 @@ int editor_edit()
 				}
 
 				rm->menu_font_small.draw(0, 0, "Tile Type Mode");
-				rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "Press [Delete] To Clear All Tile Types");
+				rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "Press [Delete] To Clear All Tile Types");
             } else if (edit_mode == 7) {
 				rm->menu_font_small.draw(0, 0, "Map Item Mode");
 			}
 
-			rm->menu_font_small.drawRightJustified(640, 0, maplist->currentFilename().c_str());
+			rm->menu_font_small.drawRightJustified(SCREEN_WIDTH, 0, maplist->currentFilename().c_str());
 
             if (g_musiccategorydisplaytimer > 0) {
 				--g_musiccategorydisplaytimer;
@@ -1705,8 +1708,8 @@ void drawmap(bool fScreenshot, short iBlockSize, bool fWithPlatforms)
 		SDL_Rect srcrect;
 		srcrect.x = 0;
 		srcrect.y = 0;
-		srcrect.w = 640;
-		srcrect.h = 480;
+		srcrect.w = SCREEN_WIDTH;
+		srcrect.h = SCREEN_HEIGHT;
 
 		SDL_Rect dstrect;
 		dstrect.x = 0;
@@ -1912,11 +1915,11 @@ int editor_warp()
 
         r.x = 0;
         r.y = 0;
-        r.w = 640;
-        r.h = 480;
+        r.w = SCREEN_WIDTH;
+        r.h = SCREEN_HEIGHT;
 
 		SDL_BlitSurface(rm->spr_warps[0].getSurface(), NULL, screen, &r);
-		rm->menu_font_small.drawRightJustified(640, 0, maplist->currentFilename().c_str());
+		rm->menu_font_small.drawRightJustified(SCREEN_WIDTH, 0, maplist->currentFilename().c_str());
 
 		DrawMessage();
         return EDITOR_WARP;
@@ -2003,8 +2006,8 @@ int editor_eyecandy()
 			rm->menu_font_small.drawCentered(320, k * 65 + 62, szEyecandyNames[k]);
 		}
 
-		rm->menu_font_small.draw(0,480-rm->menu_font_small.getHeight(), "Eyecandy: [e] Exit, [LMB] Choose Eyecandy");
-		//rm->menu_font_small.drawRightJustified(640, 0, maplist->currentFilename().c_str());
+		rm->menu_font_small.draw(0,SCREEN_HEIGHT-rm->menu_font_small.getHeight(), "Eyecandy: [e] Exit, [LMB] Choose Eyecandy");
+		//rm->menu_font_small.drawRightJustified(SCREEN_WIDTH, 0, maplist->currentFilename().c_str());
 
 		DrawMessage();
 		return EDITOR_EYECANDY;
@@ -2175,11 +2178,11 @@ int editor_properties(short iBlockCol, short iBlockRow)
 
 			iHiddenCheckboxY = 365;
 
-			rm->menu_font_small.draw(0,480-rm->menu_font_small.getHeight() * 3, "Block Property Mode");
-			rm->menu_font_small.draw(0,480-rm->menu_font_small.getHeight() * 2, "[~, 0-9] Set Value [LMB] Increase [RMB] Decrease [D] Default");
-			rm->menu_font_small.draw(0,480-rm->menu_font_small.getHeight(), "[Shift] + [0-9 or D] Set All To Value");
+			rm->menu_font_small.draw(0,SCREEN_HEIGHT-rm->menu_font_small.getHeight() * 3, "Block Property Mode");
+			rm->menu_font_small.draw(0,SCREEN_HEIGHT-rm->menu_font_small.getHeight() * 2, "[~, 0-9] Set Value [LMB] Increase [RMB] Decrease [D] Default");
+			rm->menu_font_small.draw(0,SCREEN_HEIGHT-rm->menu_font_small.getHeight(), "[Shift] + [0-9 or D] Set All To Value");
         } else if (iBlockType == 4 || iBlockType == 5 || iBlockType == 17 || iBlockType == 18 || iBlockType == 3) {
-			rm->menu_font_small.draw(0,480-rm->menu_font_small.getHeight(), "Block Property Mode");
+			rm->menu_font_small.draw(0,SCREEN_HEIGHT-rm->menu_font_small.getHeight(), "Block Property Mode");
 			iHiddenCheckboxY = 214;
 		}
 
@@ -2207,7 +2210,7 @@ int editor_properties(short iBlockCol, short iBlockRow)
 		}
 
 
-		rm->menu_font_small.drawRightJustified(640, 0, maplist->currentFilename().c_str());
+		rm->menu_font_small.drawRightJustified(SCREEN_WIDTH, 0, maplist->currentFilename().c_str());
 
 		DrawMessage();
 		FPSLimiter::instance().beforeFlip();
@@ -2247,8 +2250,8 @@ void editor_platforms_update_layout()
 
     r.w = 2 * padding + grid_area_w;
     r.h = title_area_h + grid_area_h + newbtn_area_h;
-    r.x = (640 - r.w) / 2;
-    r.y = (480 - grid_area_max_h) / 2 - title_area_h;
+    r.x = (SCREEN_WIDTH - r.w) / 2;
+    r.y = (SCREEN_HEIGHT - grid_area_max_h) / 2 - title_area_h;
 
     rNewButton[1].x = r.x + (r.w >> 1) - (rNewButton[0].w >> 1);
     rNewButton[1].y = r.y + r.h - padding - rNewButton[0].h;
@@ -2753,8 +2756,8 @@ int editor_platforms()
 
             rm->menu_font_small.drawCentered(320, r.y + 18, "Platforms");
 
-			rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "Platform Mode: [esc] Exit  [c] Check Paths, [1-8] Select, [n] New");
-			rm->menu_font_small.drawRightJustified(640, 0, maplist->currentFilename().c_str());
+			rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "Platform Mode: [esc] Exit  [c] Check Paths, [1-8] Select, [n] New");
+			rm->menu_font_small.drawRightJustified(SCREEN_WIDTH, 0, maplist->currentFilename().c_str());
 
 			for (int iPlatform = 0; iPlatform < g_iNumPlatforms; iPlatform++)
 				SDL_BlitSurface(s_platform, &g_Platforms[iPlatform].rIcon[0], screen, &g_Platforms[iPlatform].rIcon[1]);
@@ -2784,11 +2787,11 @@ int editor_platforms()
 				rm->menu_font_large.draw(rTypeButton[iType][1].x + 36, rTypeButton[iType][1].y + 6, szPathNames[iType]);
 			}
 
-			rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "Path Type");
+			rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "Path Type");
         } else if (PLATFORM_EDIT_STATE_EDIT == iPlatformEditState || PLATFORM_EDIT_STATE_ANIMATED == iPlatformEditState || PLATFORM_EDIT_STATE_TILETYPE == iPlatformEditState) {
-			rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight() * 3, "Edit Platform");
-			rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight() * 2, "[esc] Exit  [t] Tiles  [a] Animation [l] Types [del] Delete  [p] Path");
-			rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "[+/-] Velocity  [y] Draw Layer");
+			rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight() * 3, "Edit Platform");
+			rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight() * 2, "[esc] Exit  [t] Tiles  [a] Animation [l] Types [del] Delete  [p] Path");
+			rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "[+/-] Velocity  [y] Draw Layer");
 			draw_platform(iEditPlatform, PLATFORM_EDIT_STATE_TILETYPE == iPlatformEditState);
 
             if (g_Platforms[iEditPlatform].iPathType == PlatformPathType::Ellipse) {
@@ -2822,22 +2825,22 @@ int editor_platforms()
 				MapPlatform * platform = &g_Platforms[iEditPlatform];
 				DrawPlatform(platform->iPathType, g_map->platforms[iEditPlatform]->iTileData, platform->iStartX, platform->iStartY, platform->iEndX, platform->iEndY, platform->fAngle, platform->fRadiusX, platform->fRadiusY, 0, iPlatformWidth, iPlatformHeight, false, true);
 
-				rm->menu_font_small.draw(0, 480 - (rm->menu_font_small.getHeight() << 1), "Edit Path");
-				rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "[esc] Exit  [LMB] Set Start Point  [RMB] Set End Point [t] Path Type");
+				rm->menu_font_small.draw(0, SCREEN_HEIGHT - (rm->menu_font_small.getHeight() << 1), "Edit Path");
+				rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "[esc] Exit  [LMB] Set Start Point  [RMB] Set End Point [t] Path Type");
             } else if (g_Platforms[iEditPlatform].iPathType == PlatformPathType::StraightContinuous) {
 				MapPlatform * platform = &g_Platforms[iEditPlatform];
 				DrawPlatform(platform->iPathType, g_map->platforms[iEditPlatform]->iTileData, platform->iStartX, platform->iStartY, platform->iEndX, platform->iEndY, platform->fAngle, platform->fRadiusX, platform->fRadiusY, 0, iPlatformWidth, iPlatformHeight, false, true);
 
-				rm->menu_font_small.draw(0, 480 - (rm->menu_font_small.getHeight() << 1), "Edit Path: [esc] Exit  [LMB] Set Start Point  [RMB] Set Angle");
-				rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "[SHIFT + LMB] Location Snap [SHIFT + RMB] Angle Snap [t] Path Type");
+				rm->menu_font_small.draw(0, SCREEN_HEIGHT - (rm->menu_font_small.getHeight() << 1), "Edit Path: [esc] Exit  [LMB] Set Start Point  [RMB] Set Angle");
+				rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "[SHIFT + LMB] Location Snap [SHIFT + RMB] Angle Snap [t] Path Type");
             } else if (g_Platforms[iEditPlatform].iPathType == PlatformPathType::Ellipse) {
 				MapPlatform * platform = &g_Platforms[iEditPlatform];
 				DrawPlatform(platform->iPathType, g_map->platforms[iEditPlatform]->iTileData, platform->iStartX, platform->iStartY, platform->iEndX, platform->iEndY, platform->fAngle, platform->fRadiusX, platform->fRadiusY, 0, iPlatformWidth, iPlatformHeight, false, true);
 
-				rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight() * 4, "Edit Path: [esc] Exit  [LMB] Set Center [SHIFT + LMB] Center Snap");
-				rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight() * 3, "[X + LMB] Set X Radius [SHIFT + X + LMB] X Radius Snap");
-				rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight() * 2, "[Z + LMB] Set Y Radius [SHIFT + Z + LMB] Y Radius Snap");
-				rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "[C + LMB] Set Circular Radius [SHIFT + C + LMB] Circular Radius Snap [t] Path Type");
+				rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight() * 4, "Edit Path: [esc] Exit  [LMB] Set Center [SHIFT + LMB] Center Snap");
+				rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight() * 3, "[X + LMB] Set X Radius [SHIFT + X + LMB] X Radius Snap");
+				rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight() * 2, "[Z + LMB] Set Y Radius [SHIFT + Z + LMB] Y Radius Snap");
+				rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "[C + LMB] Set Circular Radius [SHIFT + C + LMB] Circular Radius Snap [t] Path Type");
 			}
         } else if (PLATFORM_EDIT_STATE_TEST == iPlatformEditState) {
 			g_map->updatePlatforms();
@@ -2845,7 +2848,7 @@ int editor_platforms()
 			//Platforms are drawn inside drawmap(...)
 			drawmap(false, TILESIZE, true);
 
-			rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "Check Paths: [esc] Exit");
+			rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "Check Paths: [esc] Exit");
 		}
 
 		DrawMessage();
@@ -3193,7 +3196,7 @@ int editor_maphazards()
 							MapHazard * hazard = &g_map->maphazards[iEditMapHazard];
 
                         if (hazard->itype >= 2 && hazard->itype <= 7) {
-								if (g_map->maphazards[iEditMapHazard].iparam[0] < 480)
+								if (g_map->maphazards[iEditMapHazard].iparam[0] < SCREEN_HEIGHT)
 									g_map->maphazards[iEditMapHazard].iparam[0] += 30;
 							}
 						}
@@ -3345,7 +3348,7 @@ int editor_maphazards()
         if (MAPHAZARD_EDIT_STATE_SELECT == iEditState) {
 			SDL_BlitSurface(s_platform, &rBackground[0], screen, &rBackground[1]);
 
-			rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "Map Hazard Mode: [esc] Exit");
+			rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "Map Hazard Mode: [esc] Exit");
 
 			for (int iMapHazard = 0; iMapHazard < g_map->maphazards.size(); iMapHazard++)
 				SDL_BlitSurface(s_platform, &rIconRects[iMapHazard][0], screen, &rIconRects[iMapHazard][1]);
@@ -3365,39 +3368,39 @@ int editor_maphazards()
 				rm->menu_font_large.draw(rTypeButton[iType][1].x + 36, rTypeButton[iType][1].y + 6, szHazardNames[iType]);
 			}
 
-			rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "Choose Hazard Type");
+			rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "Choose Hazard Type");
         } else if (MAPHAZARD_EDIT_STATE_LOCATION == iEditState) {
 			const MapHazard& hazard = g_map->maphazards[iEditMapHazard];
 			DrawMapHazard(hazard, 0, true);
 			DrawMapHazardControls(hazard);
 
-			rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "Location: [esc] Exit, [p] Properties, [LMB] Set Location");
+			rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "Location: [esc] Exit, [p] Properties, [LMB] Set Location");
         } else if (MAPHAZARD_EDIT_STATE_PROPERTIES == iEditState) {
             const MapHazard& hazard = g_map->maphazards[iEditMapHazard];
             DrawMapHazard(hazard, 0, true);
             DrawMapHazardControls(hazard);
 
             if (hazard.itype == 0 || hazard.itype == 1) {
-                rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight() * 3, "Properties");
-                rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight() * 2, "[esc] Exit, [l] Location, [+/-] Velocity, [LMB] Angle and Radius");
+                rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight() * 3, "Properties");
+                rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight() * 2, "[esc] Exit, [l] Location, [+/-] Velocity, [LMB] Angle and Radius");
 
                 if (hazard.itype == 1) {
-                    rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "[Shift + LMB] Snap To Angle, [1-9] Number of Rotodiscs");
+                    rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "[Shift + LMB] Snap To Angle, [1-9] Number of Rotodiscs");
                 } else {
-                    rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "[Shift + LMB] Snap To Angle");
+                    rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "[Shift + LMB] Snap To Angle");
                 }
             } else if (hazard.itype == 2) {
-                rm->menu_font_small.draw(0, 480 - (rm->menu_font_small.getHeight() << 1), "Properties: [esc] Exit, [l] Location, [d] Direction");
-                rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "[-/+] Velocity, [[/]] or [</>] Frequency");
+                rm->menu_font_small.draw(0, SCREEN_HEIGHT - (rm->menu_font_small.getHeight() << 1), "Properties: [esc] Exit, [l] Location, [d] Direction");
+                rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "[-/+] Velocity, [[/]] or [</>] Frequency");
             } else if (hazard.itype >= 3 && hazard.itype <= 7) {
-                rm->menu_font_small.draw(0, 480 - (rm->menu_font_small.getHeight() << 1), "Properties: [esc] Exit, [l] Location");
-                rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "[[/]] or [</>] Frequency, [d] direction");
+                rm->menu_font_small.draw(0, SCREEN_HEIGHT - (rm->menu_font_small.getHeight() << 1), "Properties: [esc] Exit, [l] Location");
+                rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "[[/]] or [</>] Frequency, [d] direction");
             } else {
-                rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "Properties: [esc] Exit, [l] Location");
+                rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "Properties: [esc] Exit, [l] Location");
             }
         }
 
-        rm->menu_font_small.drawRightJustified(640, 0, maplist->currentFilename().c_str());
+        rm->menu_font_small.drawRightJustified(SCREEN_WIDTH, 0, maplist->currentFilename().c_str());
 
         DrawMessage();
         return EDITOR_MAPHAZARDS;
@@ -3577,7 +3580,7 @@ int editor_tiles()
 								view_tileset_repeat_timer = 30;
 							}
                     } else if (event.key.keysym.sym == SDLK_DOWN) {
-                        if (view_tileset_y < g_tilesetmanager->tileset(set_tile_tileset)->height() - 15) {
+                        if (view_tileset_y < g_tilesetmanager->tileset(set_tile_tileset)->height() - (SCREEN_HEIGHT / TILESIZE)) {
 								view_tileset_y++;
 								view_tileset_repeat_direction = 1;
 								view_tileset_repeat_timer = 30;
@@ -3589,7 +3592,7 @@ int editor_tiles()
 								view_tileset_repeat_timer = 30;
 							}
                     } else if (event.key.keysym.sym == SDLK_RIGHT) {
-                        if (view_tileset_x < g_tilesetmanager->tileset(set_tile_tileset)->width() - 20) {
+                        if (view_tileset_x < g_tilesetmanager->tileset(set_tile_tileset)->width() - (SCREEN_WIDTH / TILESIZE)) {
 								view_tileset_x++;
 								view_tileset_repeat_direction = 3;
 								view_tileset_repeat_timer = 30;
@@ -3698,11 +3701,11 @@ int editor_tiles()
 
                 if (view_tileset_repeat_direction == 0 && view_tileset_y > 0) {
 					view_tileset_y--;
-                } else if (view_tileset_repeat_direction == 1 && view_tileset_y < g_tilesetmanager->tileset(set_tile_tileset)->height() - 15) {
+                } else if (view_tileset_repeat_direction == 1 && view_tileset_y < g_tilesetmanager->tileset(set_tile_tileset)->height() - (SCREEN_HEIGHT / TILESIZE)) {
 					view_tileset_y++;
                 } else if (view_tileset_repeat_direction == 2 && view_tileset_x > 0) {
 					view_tileset_x--;
-                } else if (view_tileset_repeat_direction == 3 && view_tileset_x < g_tilesetmanager->tileset(set_tile_tileset)->width() - 20) {
+                } else if (view_tileset_repeat_direction == 3 && view_tileset_x < g_tilesetmanager->tileset(set_tile_tileset)->width() - (SCREEN_WIDTH / TILESIZE)) {
 					view_tileset_x++;
 				}
 			}
@@ -3716,21 +3719,21 @@ int editor_tiles()
 		SDL_Rect rectSrc;
 		rectSrc.x = view_tileset_x << 5;
 		rectSrc.y = view_tileset_y << 5;
-                rectSrc.w = tileset->width() > 20 ? 640 : tileset->width() << 5;
-                rectSrc.h = tileset->height() > 15 ? 480 : tileset->height() << 5;
+                rectSrc.w = tileset->width() > (SCREEN_WIDTH / TILESIZE) ? SCREEN_WIDTH : tileset->width() << 5;
+                rectSrc.h = tileset->height() > (SCREEN_HEIGHT / TILESIZE) ? SCREEN_HEIGHT : tileset->height() << 5;
 
         r.x = 0;
         r.y = 0;
-        r.w = 640;
-        r.h = 480;
+        r.w = SCREEN_WIDTH;
+        r.h = SCREEN_HEIGHT;
 
         SDL_BlitSurface(g_tilesetmanager->tileset(set_tile_tileset)->surface(0), &rectSrc, screen, &r);
-		//rm->menu_font_small.drawRightJustified(640, 0, maplist->currentFilename().c_str());
-                rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), tileset->name());
+		//rm->menu_font_small.drawRightJustified(SCREEN_WIDTH, 0, maplist->currentFilename().c_str());
+                rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), tileset->name());
 
         int i, j;
-        for (i = view_tileset_x; i < view_tileset_x + 20 && i < tileset->width(); i++) {
-            for (j = view_tileset_y; j < view_tileset_y + 15 && j < tileset->height(); j++) {
+        for (i = view_tileset_x; i < view_tileset_x + (SCREEN_WIDTH / TILESIZE) && i < tileset->width(); i++) {
+            for (j = view_tileset_y; j < view_tileset_y + (SCREEN_HEIGHT / TILESIZE) && j < tileset->height(); j++) {
                                 TileType t = tileset->tileType(i, j);
 				if (t != TileType::NonSolid)
                                     rm->spr_tiletypes.draw((i - view_tileset_x) << 5, (j - view_tileset_y) << 5, static_cast<int>(PrevTileType(t)) << 3, 0, 8, 8);
@@ -3748,7 +3751,7 @@ int editor_tiles()
 
 		//Test code to help convert old tilesets into new tilesets
 
-		rm->menu_font_small.drawRightJustified(640, 0, "%d", iCurrentTile);
+		rm->menu_font_small.drawRightJustified(SCREEN_WIDTH, 0, "%d", iCurrentTile);
 		rm->spr_OldTileSet.draw(576, 224, iCurrentTile % 20 * 32, iCurrentTile / 20 * 32, 32, 32);
 
 
@@ -3852,7 +3855,7 @@ int editor_blocks()
 
 		SDL_BlitSurface(rm->spr_blocks[0].getSurface(), &rBlocksRow3Src, screen, &rBlocksRow3Dst);
 
-		rm->menu_font_small.drawRightJustified(640, 0, maplist->currentFilename().c_str());
+		rm->menu_font_small.drawRightJustified(SCREEN_WIDTH, 0, maplist->currentFilename().c_str());
 
 		DrawMessage();
 		return EDITOR_BLOCKS;
@@ -3900,8 +3903,8 @@ int editor_mapitems()
 
 		rm->spr_mapitems[0].draw(0, 0, 0, 0, 192, 32);
 
-		rm->menu_font_small.drawRightJustified(640, 0, maplist->currentFilename().c_str());
-		rm->menu_font_small.drawRightJustified(0, 480 - rm->menu_font_small.getHeight(), "Map Items");
+		rm->menu_font_small.drawRightJustified(SCREEN_WIDTH, 0, maplist->currentFilename().c_str());
+		rm->menu_font_small.drawRightJustified(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "Map Items");
 
 		DrawMessage();
 		return EDITOR_MAPITEMS;
@@ -4056,7 +4059,7 @@ int editor_modeitems()
 				}
 			}
 
-			rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "Set Race Goal Locations - Press [2] for Flag Bases");
+			rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "Set Race Goal Locations - Press [2] for Flag Bases");
         } else if (modeitemmode == 1) {
             if (g_map->iNumFlagBases == 0) {
 				rm->menu_font_large.drawCentered(320, 200, "Flag bases are set to random.");
@@ -4067,10 +4070,10 @@ int editor_modeitems()
 				}
 			}
 
-			rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "Set Flag Base Locations - Press [1] for Race Goals");
+			rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "Set Flag Base Locations - Press [1] for Race Goals");
 		}
 
-		rm->menu_font_small.drawRightJustified(640, 0, maplist->currentFilename().c_str());
+		rm->menu_font_small.drawRightJustified(SCREEN_WIDTH, 0, maplist->currentFilename().c_str());
 
 		DrawMessage();
 		return EDITOR_MODEITEMS;
@@ -4120,7 +4123,7 @@ int editor_tiletype()
 
 		rm->spr_transparenttiles.draw(0, 0);
 
-		rm->menu_font_small.drawRightJustified(640, 0, maplist->currentFilename().c_str());
+		rm->menu_font_small.drawRightJustified(SCREEN_WIDTH, 0, maplist->currentFilename().c_str());
 
 		DrawMessage();
 		return EDITOR_TILETYPE;
@@ -4235,7 +4238,7 @@ int editor_backgrounds()
 			}
 		}
 
-		SDL_Rect rect = {0, 0, 640, 480};
+		SDL_Rect rect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 		SDL_FillRect(screen, &rect, 0x0);
 
         for (short iBackground = 0; iBackground < 16; iBackground++) {
@@ -4245,8 +4248,8 @@ int editor_backgrounds()
 			SDL_BlitSurface(sBackgrounds[iBackground], &rSrc, screen, &rDst[iBackground]);
 		}
 
-		rm->menu_font_small.draw(0,480-rm->menu_font_small.getHeight() * 2, "[Page Up] next page, [Page Down] previous page");
-		rm->menu_font_small.draw(0,480-rm->menu_font_small.getHeight(), "[LMB] choose background with music category, [RMB] choose just background");
+		rm->menu_font_small.draw(0,SCREEN_HEIGHT-rm->menu_font_small.getHeight() * 2, "[Page Up] next page, [Page Down] previous page");
+		rm->menu_font_small.draw(0,SCREEN_HEIGHT-rm->menu_font_small.getHeight(), "[LMB] choose background with music category, [RMB] choose just background");
 
 		int iID = mouse_x / 160 + mouse_y / 120 * 4 + iPage * 16;
 
@@ -4405,7 +4408,7 @@ int editor_animation()
 		//rm->menu_shade.draw(0, 0);
 		SDL_FillRect(screen, NULL, 0xFF888888);
 
-        for (short iCol = view_animated_tileset_x; iCol < view_animated_tileset_x + 20; iCol++) {
+        for (short iCol = view_animated_tileset_x; iCol < view_animated_tileset_x + (SCREEN_WIDTH / TILESIZE); iCol++) {
             for (short iRow = 0; iRow < 8; iRow++) {
 				short iDestX = (iCol - view_animated_tileset_x) << 5;
 				short iDestY = iRow << 5;
@@ -4428,9 +4431,9 @@ int editor_animation()
 			}
 		}
 
-		rm->menu_font_small.drawRightJustified(640, 0, maplist->currentFilename().c_str());
+		rm->menu_font_small.drawRightJustified(SCREEN_WIDTH, 0, maplist->currentFilename().c_str());
 
-		rm->menu_font_small.draw(0, 480 - rm->menu_font_small.getHeight(), "Use Arrow Keys To Scroll");
+		rm->menu_font_small.draw(0, SCREEN_HEIGHT - rm->menu_font_small.getHeight(), "Use Arrow Keys To Scroll");
 
 		DrawMessage();
 		return EDITOR_ANIMATION;
@@ -4438,7 +4441,7 @@ int editor_animation()
 
 void LoadBackgroundPage(SDL_Surface ** sBackgrounds, short iPage)
 {
-	SDL_Rect srcRectBackground = {0, 0, 640, 480};
+	SDL_Rect srcRectBackground = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 	SDL_Rect dstRectBackground = {0, 0, 160, 120};
 
     for (short iIndex = 0; iIndex < 16; iIndex++) {
@@ -4638,7 +4641,7 @@ bool dialog(const char * title, const char * instructions, char * input, int inp
 	rm->spr_dialog.draw(224, 176, 0, 0, 192, 128);
 	rm->menu_font_large.drawCentered(320, 200, title);
 	rm->menu_font_small.draw(240, 235, instructions);
-	rm->menu_font_small.drawRightJustified(640, 0, maplist->currentFilename().c_str());
+	rm->menu_font_small.drawRightJustified(SCREEN_WIDTH, 0, maplist->currentFilename().c_str());
 	gfx_flipscreen();
 
     while (true) {
@@ -4667,7 +4670,7 @@ bool dialog(const char * title, const char * instructions, char * input, int inp
 							rm->menu_font_large.drawCentered(320, 200, title);
 							rm->menu_font_small.draw(240, 235, instructions);
 							rm->menu_font_small.draw(240, 255, input);
-							rm->menu_font_small.drawRightJustified(640, 0, maplist->currentFilename().c_str());
+							rm->menu_font_small.drawRightJustified(SCREEN_WIDTH, 0, maplist->currentFilename().c_str());
 							gfx_flipscreen();
 
 							currentChar--;
@@ -4723,7 +4726,7 @@ bool dialog(const char * title, const char * instructions, char * input, int inp
 							rm->menu_font_large.drawCentered(320, 200, title);
 							rm->menu_font_small.draw(240, 235, instructions);
 							rm->menu_font_small.draw(240, 255, input);
-							rm->menu_font_small.drawRightJustified(640, 0, maplist->currentFilename().c_str());
+							rm->menu_font_small.drawRightJustified(SCREEN_WIDTH, 0, maplist->currentFilename().c_str());
 							gfx_flipscreen();
 						}
 					}
@@ -5259,7 +5262,7 @@ void takescreenshot()
 		short iTileSize = iTileSizes[iScreenshotSize];
 
 		//Allow wrapping of path dots
-		rm->spr_platformpath.SetWrap(true, 640 >> iScreenshotSize);
+		rm->spr_platformpath.SetWrap(true, SCREEN_WIDTH >> iScreenshotSize);
 
 		//Create new screenshot surface
 		SDL_Surface * screenshot = SDL_CreateRGBSurface(old_screen->flags, iTileSize * 20, iTileSize * 15, old_screen->format->BitsPerPixel, 0, 0, 0, 0);
