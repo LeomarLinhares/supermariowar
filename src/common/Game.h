@@ -7,7 +7,7 @@ void ensureSettingsDir();
 
 class App {
 public:
-    static constexpr int screenWidth = 640;
-    static constexpr int screenHeight = 480;
+    static int screenWidth;
+    static int screenHeight;
     static constexpr int menuTransparency = 72;
 };
