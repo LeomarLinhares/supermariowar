@@ -15,9 +15,8 @@
 extern SDL_Surface* screen;
 
 #define GFX_BPP 16
-
-int GFX_SCREEN_W = 640;
-int GFX_SCREEN_H = 480;
+#define GFX_SCREEN_W App::screenWidth
+#define GFX_SCREEN_H App::screenHeight
 
 enum SDL_Errors {
     E_INIT_SDL,
