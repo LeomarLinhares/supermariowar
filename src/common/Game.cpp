@@ -15,6 +15,9 @@
 #endif
 
 
+int App::screenWidth = 640;
+int App::screenHeight = 480;
+
 void ensureSettingsDir()
 {
     const std::string smwHome = GetHomeDirectory();

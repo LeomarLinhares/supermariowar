@@ -5,6 +5,9 @@
 
 #include "gfxPalette.h"
 
+extern int GFX_SCREEN_W;
+extern int GFX_SCREEN_H;
+
 class GraphicsSDL
 {
 public:

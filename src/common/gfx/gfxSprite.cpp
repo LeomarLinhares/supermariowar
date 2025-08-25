@@ -1,6 +1,7 @@
 #include "gfxSprite.h"
 
 #include "gfx.h"
+#include "Game.h"
 
 #include "SDL_image.h"
 #include "sdl12wrapper.h"
@@ -19,7 +20,7 @@ extern short y_shake;
 gfxSprite::gfxSprite()
 {
     clearSurface();
-    iWrapSize = 640; // TODO: Get it from a global setting.
+    iWrapSize = App::screenWidth;
 }
 
 gfxSprite::~gfxSprite()
